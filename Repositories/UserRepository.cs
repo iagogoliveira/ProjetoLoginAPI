@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjetoLoginAPI.Models;
-using ProjetoLoginAPI.Data;
+using LoginApiProject.Models;
+using LoginApiProject.Data;
 
-namespace ProjetoLoginAPI.Repositories
+namespace LoginApiProject.Repositories
 {
     public class UserRepository : IUserRepository
     {

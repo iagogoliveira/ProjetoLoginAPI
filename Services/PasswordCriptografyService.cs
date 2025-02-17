@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
 
-namespace ProjetoLoginAPI.Services
+namespace LoginApiProject.Services
 {
-    public class PasswordCriptografy
+    public class PasswordCriptografyService
     {
         public static string GeneratePasswordHash(string password)
         {

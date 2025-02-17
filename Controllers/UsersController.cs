@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjetoLoginAPI.Models;
-using ProjetoLoginAPI.DTOs;
-using ProjetoLoginAPI.Services;
-namespace ProjetoLoginAPI.Controllers
+using LoginApiProject.Models;
+using LoginApiProject.DTOs;
+using LoginApiProject.Services;
+using Microsoft.AspNetCore.Authorization;
+namespace LoginApiProject.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -10,9 +11,11 @@ namespace ProjetoLoginAPI.Controllers
     {
 
         private readonly UserServices _userServices;
-        public UsersController(UserServices userServices)
+        private readonly TokenService _tokenService;
+        public UsersController(UserServices userServices, TokenService tokenService)
         {
             _userServices = userServices;
+            _tokenService = tokenService;
         }
 
         [HttpPost("CreateUser")]
@@ -33,7 +36,6 @@ namespace ProjetoLoginAPI.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 return BadRequest(ex.Message);
             }
 
@@ -43,22 +45,23 @@ namespace ProjetoLoginAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult UserLogin([FromBody] UserLoginDto loginDto)
+        public async Task<IActionResult> UserLogin([FromBody] UserLoginDto loginDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            bool sucessoLogin = _userServices.AuthenticateUser(loginDto.Login, loginDto.Password);
+            var userLogin = await _userServices.AuthenticateUserAsync(loginDto.Login, loginDto.Password);
 
-            if (sucessoLogin)
+            if (userLogin != null)
             {
-                return Ok(new { message = "Successful Login." });
+                var token = await _tokenService.GenerateTokenAsync(userLogin.Id.ToString(), userLogin.Email);
+                return CreatedAtAction(nameof(UserLogin), new { Token = token });
             }
             else
             {
-                return Unauthorized(new { message = "Invalid Credentials."});
+                return Unauthorized(new { message = "Invalid Credentials." });
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProjetoLoginAPI.Models;
+using LoginApiProject.Models;
 
-namespace ProjetoLoginAPI.Data
+namespace LoginApiProject.Data
 {
     public class AppDbContext : DbContext
     {

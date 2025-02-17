@@ -1,7 +1,7 @@
-﻿using ProjetoLoginAPI.Models;
-using ProjetoLoginAPI.Repositories;
+﻿using LoginApiProject.Models;
+using LoginApiProject.Repositories;
 
-namespace ProjetoLoginAPI.Services
+namespace LoginApiProject.Services
 {
     public class UserServices
     {
@@ -14,23 +14,28 @@ namespace ProjetoLoginAPI.Services
 
         public void CreateUser(User user)
         {
-            user.Password = PasswordCriptografy.GeneratePasswordHash(user.Password);
+            user.Password = PasswordCriptografyService.GeneratePasswordHash(user.Password);
             user.Id = Guid.NewGuid();
 
             _userRepository.Add(user);
         }
 
-        public bool AuthenticateUser(string userLogin, string userPassword)
+        public async Task<User?> AuthenticateUserAsync(string userLogin, string userPassword)
         {
-            var user = _userRepository.getLoginAsync(userLogin);
+            var user = await _userRepository.getLoginAsync(userLogin);
 
-            if (user.Result != null && PasswordCriptografy.ValidPassword(userPassword, user.Result.Password))
+            if (user != null && PasswordCriptografyService.ValidPassword(userPassword, user.Password))
             {
-                return true;
+                return user;
             }
 
-            return false;
-        } 
+            return null;
+        }
+
+        public User GetUser(string login)
+        {
+            return _userRepository.getLoginAsync(login).Result;
+        }
 
     }
 }

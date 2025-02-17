@@ -1,4 +1,4 @@
-﻿namespace ProjetoLoginAPI.DTOs
+﻿namespace LoginApiProject.DTOs
 {
     public class CreateUserDto
     {

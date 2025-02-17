@@ -1,6 +1,6 @@
-﻿using ProjetoLoginAPI.Models;
+﻿using LoginApiProject.Models;
 
-namespace ProjetoLoginAPI.Repositories
+namespace LoginApiProject.Repositories
 {
     public interface IUserRepository
     {
